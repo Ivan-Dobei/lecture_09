@@ -1,24 +1,41 @@
 import axiosInstance from './axiosInstance';
-import {IPost} from "../models/IPost";
-import axios from "axios";
 
-// todo: fix any type
-export const createPost = async (postData: any) => {
-    const response = await axiosInstance.post('/api/exhibits', postData);
+export const createPost = async (formData: FormData) => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+        throw new Error('No authorization token found.');
+    }
+
+    const response = await axiosInstance.post('/api/exhibits', formData, {
+        headers: {
+            'Content-Type': 'multipart/form-data',
+            Authorization: `Bearer ${token}`,
+        },
+    });
     return response.data;
 };
+
 
 export const fetchAllPosts = async () => {
-    const response = await axiosInstance.get<IPost[]>('/api/exhibits');
-    return response.data;
+    const response = await axiosInstance.get('/api/exhibits');
+    return response.data.data;
 };
 
-// todo: getImage is not working, need to fix
-export const getImage = async (filename: string) => {
-    console.log(filename);
-    const response = await axios.get(`http://ec2-13-49-67-34.eu-north-1.compute.amazonaws.com${filename}`, {
-        responseType: 'blob'
+export const fetchMyPosts = async () => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+        throw new Error('No authorization token found.');
+    }
+    const response = await axiosInstance.get('/api/exhibits/my-posts', {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
     });
-    return URL.createObjectURL(response.data);
+    return response.data.data;
+};
+
+export const deletePostById = async (id: number) => {
+    const response = await axiosInstance.delete(`/api/exhibits/${id}`);
+    return response.data.data;
 };
 

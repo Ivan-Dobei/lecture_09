@@ -28,7 +28,7 @@ function App() {
                     }
                 />
                 <Route
-                    path="/new-post"
+                    path="/newPost"
                     element={
                         <ProtectedRoute isAllowed={isAuthenticated}>
                             <NewPost />

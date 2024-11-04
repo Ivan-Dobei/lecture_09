@@ -41,9 +41,10 @@ function LoginForm() {
     const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (validateForm()) {
-            console.log('Login form submitted', formData);
             dispatch(login(formData))
-            navigate('/home');
+                .then(() => {
+                    navigate('/home')
+                });
         }
     };
 

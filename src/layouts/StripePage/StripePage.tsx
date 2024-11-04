@@ -1,10 +1,16 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { Box, Typography, Grid, CircularProgress } from '@mui/material';
 import usePosts from "../../hooks/usePosts";
 import Post from "../../components/Post/Post";
 
 function StripePage() {
-    const {posts, loading} = usePosts();
+    const [refreshList, setRefreshList] = useState<boolean>(false);
+    const {posts, loading} = usePosts(refreshList);
+
+    const refreshing = () => {
+        setRefreshList(!refreshList);
+    }
+
 
     if (loading) {
         return (
@@ -27,7 +33,7 @@ function StripePage() {
             >
                 {posts.map((post) => (
                     <Box key={post.id}>
-                        <Post post={post} />
+                        <Post post={post} refreshList={refreshing}/>
                     </Box>
                 ))}
             </Box>

@@ -1,16 +1,16 @@
 import { useEffect, useState } from 'react';
 import { IPost } from '../models/IPost';
-import { fetchAllPosts } from '../api/exhibitActions';
+import {fetchMyPosts} from '../api/exhibitActions';
 
-function usePosts(refreshing: boolean) {
-    const [posts, setPosts] = useState<IPost[]>([]);
+function useMyPosts(refreshing: boolean) {
+    const [myPosts, setMyPosts] = useState<IPost[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
 
     useEffect(() => {
         const fetchPosts = async () => {
             try {
-                const fetchedPosts = await fetchAllPosts();
-                setPosts(fetchedPosts);
+                const fetchedPosts = await fetchMyPosts();
+                setMyPosts(fetchedPosts);
             } catch (error) {
                 console.error("Failed to fetch posts:", error);
             } finally {
@@ -20,7 +20,7 @@ function usePosts(refreshing: boolean) {
         fetchPosts();
     }, [refreshing]);
 
-    return {posts, loading};
+    return {myPosts, loading};
 }
 
-export default usePosts;
+export default useMyPosts;

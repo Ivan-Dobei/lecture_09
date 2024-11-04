@@ -1,17 +1,15 @@
-import {createSlice} from '@reduxjs/toolkit';
-import {IUser, IUserData} from "../../models/IUser";
+import {createSlice, PayloadAction} from '@reduxjs/toolkit';
+import {IUserData} from "../../models/IUser";
 import {login, register} from "../actionCreaotors/usesActionCreators";
 
 interface UserState {
-    user: IUser | null;
     userData: IUserData | null;
     isAuthenticated: boolean;
 }
 
 const initialState: UserState = {
-    user: null,
     isAuthenticated: !!localStorage.getItem('token'),
-    userData: null,
+    userData: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')!) : null,
 }
 
 const userSlice = createSlice({
@@ -22,16 +20,15 @@ const userSlice = createSlice({
             localStorage.removeItem('token');
             state.isAuthenticated = false;
             state.userData = null;
-            state.user = null;
         },
     },
     extraReducers: (builder) => {
         builder
-            .addCase(login.fulfilled, (state, action) => {
+            .addCase(login.fulfilled, (state, action: PayloadAction<IUserData>) => {
                 state.isAuthenticated = true;
                 state.userData = action.payload;
             })
-            .addCase(register.fulfilled, (state, action) => {
+            .addCase(register.fulfilled, (state, action: PayloadAction<IUserData>) => {
                 state.isAuthenticated = true;
                 state.userData = action.payload;
             });

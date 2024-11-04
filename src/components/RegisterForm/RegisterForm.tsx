@@ -41,8 +41,10 @@ function RegisterForm() {
     const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (validateForm()) {
-            dispatch(register(formData));
-            navigate('/home');
+            dispatch(register(formData))
+                .then(() => {
+                    navigate('/home')
+                });
         }
     };
 

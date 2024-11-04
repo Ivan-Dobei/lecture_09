@@ -5,11 +5,6 @@ const axiosInstance = axios.create({
     timeout: 10000,
 });
 
-const imageAxiosInstance = axios.create({
-    baseURL: 'http://ec2-13-49-67-34.eu-north-1.compute.amazonaws.com',
-    timeout: 10000,
-});
-
 axiosInstance.interceptors.request.use(
     (config) => {
         const token = localStorage.getItem('token');
