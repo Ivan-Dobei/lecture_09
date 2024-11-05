@@ -41,7 +41,7 @@ const NewPost = () => {
     };
 
     return (
-        <Card sx={{maxWidth: 600, margin: '0 auto', padding: 3, boxShadow: 3, marginTop: '50px'}}>
+        <Card sx={{maxWidth: 600, margin: '0 auto', padding: 3, boxShadow: 3, marginTop: '100px'}}>
             <CardContent>
                 <Typography variant="h5" gutterBottom>
                     Create New Post

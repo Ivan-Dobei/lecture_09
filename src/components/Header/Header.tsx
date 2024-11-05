@@ -19,7 +19,7 @@ function Header() {
     };
 
     return (
-        <AppBar position="static">
+        <AppBar position="fixed">
             <Toolbar>
                 <ControlBar/>
                 <Box sx={{marginLeft: 'auto'}}>

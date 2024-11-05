@@ -8,6 +8,19 @@ export interface IPost {
     commentCount: number;
 }
 
+export interface IPostData {
+    data: IPost[];
+    total: number;
+    page: string;
+    lastPage: number;
+}
+
+export interface IPostDataPagination {
+    total: number;
+    page: string;
+    lastPage: number;
+}
+
 export interface ISendPost {
     image: File | null;
     description: string;

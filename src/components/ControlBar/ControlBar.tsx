@@ -7,7 +7,7 @@ import {
 } from '@mui/material';
 import {Link} from "react-router-dom";
 
-const ControlBar: React.FC = () => {
+const ControlBar = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     const openMenu = () => {
@@ -17,7 +17,6 @@ const ControlBar: React.FC = () => {
     const closeMenu = () => {
         setIsMenuOpen(false);
     };
-
 
     return (
         <Box>

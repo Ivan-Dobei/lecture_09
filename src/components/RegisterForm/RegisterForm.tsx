@@ -1,7 +1,7 @@
-import React, { useState, ChangeEvent, FormEvent } from 'react';
-import { TextField, Button, Box, Typography } from '@mui/material';
-import { IUserData } from "../../models/IUser";
-import {register} from "../../store/actionCreaotors/usesActionCreators";
+import React, {useState, ChangeEvent, FormEvent} from 'react';
+import {TextField, Button, Box, Typography} from '@mui/material';
+import {IUserData} from "../../models/IUser";
+import {login, register} from "../../store/actionCreaotors/usesActionCreators";
 import {Link, useNavigate} from "react-router-dom";
 import {useAppDispatch} from "../../hooks/redux";
 
@@ -38,13 +38,12 @@ function RegisterForm() {
         return Object.keys(tempErrors).length === 0;
     };
 
-    const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (validateForm()) {
-            dispatch(register(formData))
-                .then(() => {
-                    navigate('/home')
-                });
+            await dispatch(register(formData));
+            await dispatch(login(formData));
+            navigate('/home');
         }
     };
 
@@ -58,7 +57,7 @@ function RegisterForm() {
                 gap: 2,
                 maxWidth: 400,
                 margin: 'auto',
-                mt: 5,
+                marginTop: '100px',
                 p: 3,
                 borderRadius: 2,
                 boxShadow: 3,

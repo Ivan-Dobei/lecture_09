@@ -7,6 +7,7 @@ import HomePage from "./layouts/HomePage/HomePage";
 import NewPost from "./layouts/NewPost/NewPost";
 import {useAppSelector} from "./hooks/redux";
 import Header from "./components/Header/Header";
+import {Box} from "@mui/material";
 
 function App() {
     const isAuthenticated = useAppSelector((state) => state.user.isAuthenticated);
@@ -14,28 +15,30 @@ function App() {
     return (
         <>
             <Header/>
-            <Routes>
-                <Route path="/" element={<StripePage />} />
-                <Route path="/login" element={<LoginPage />} />
-                <Route path="/register" element={<RegisterPage />} />
+            <Box sx={{marginTop: '60px'}}>
+                <Routes>
+                    <Route path="/" element={<StripePage />} />
+                    <Route path="/login" element={<LoginPage />} />
+                    <Route path="/register" element={<RegisterPage />} />
 
-                <Route
-                    path="/home"
-                    element={
-                        <ProtectedRoute isAllowed={isAuthenticated}>
-                            <HomePage />
-                        </ProtectedRoute>
-                    }
-                />
-                <Route
-                    path="/newPost"
-                    element={
-                        <ProtectedRoute isAllowed={isAuthenticated}>
-                            <NewPost />
-                        </ProtectedRoute>
-                    }
-                />
-            </Routes>
+                    <Route
+                        path="/home"
+                        element={
+                            <ProtectedRoute isAllowed={isAuthenticated}>
+                                <HomePage />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path="/newPost"
+                        element={
+                            <ProtectedRoute isAllowed={isAuthenticated}>
+                                <NewPost />
+                            </ProtectedRoute>
+                        }
+                    />
+                </Routes>
+            </Box>
         </>
     );
 }

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import {useEffect, useState} from 'react';
 import {getAllCommentsById} from "../api/commentActions";
 import {IComment} from "../models/IComment";
 
