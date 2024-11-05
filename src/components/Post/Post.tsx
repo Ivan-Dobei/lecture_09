@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
-import { Box, Button, Card, CardContent, CardMedia, Typography } from "@mui/material";
-import { IPost } from "../../models/IPost";
+import React, {useState} from 'react';
+import {Box, Button, Card, CardContent, CardMedia, Typography} from "@mui/material";
+import {IPost} from "../../models/IPost";
 import axiosInstance from "../../api/axiosInstance";
-import { deletePostById } from "../../api/exhibitActions";
-import { IComment } from "../../models/IComment";
-import { getAllCommentsById } from "../../api/commentActions";
+import {deletePostById} from "../../api/exhibitActions";
+import {IComment} from "../../models/IComment";
+import {getAllCommentsById} from "../../api/commentActions";
 import CommentList from "../CommentList/CommentList";
 import useUser from "../../hooks/useUser";
 

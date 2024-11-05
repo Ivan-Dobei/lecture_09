@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
-import { Box, Button, List, TextField, Typography, Paper, Divider } from "@mui/material";
+import React, {useState} from 'react';
+import {Box, Button, List, TextField, Typography, Paper, Divider} from "@mui/material";
 import Comment from "../Comment/Comment";
-import { IComment } from "../../models/IComment";
-import { createCommentById } from "../../api/commentActions";
+import {IComment} from "../../models/IComment";
+import {createCommentById} from "../../api/commentActions";
 
 interface CommentListProps {
     postId: number;

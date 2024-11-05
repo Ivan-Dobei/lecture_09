@@ -1,11 +1,9 @@
 import React from 'react';
-import LoginForm from "../../components/LoginForm/LoginForm";
+import Form from "../../components/Form/Form";
 
 function LoginPage() {
     return (
-        <div>
-            <LoginForm/>
-        </div>
+        <Form isRegisterForm={false}/>
     );
 }
 

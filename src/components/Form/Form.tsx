@@ -1,23 +1,26 @@
-import React, { useState, ChangeEvent, FormEvent } from 'react';
-import { TextField, Button, Box, Typography } from '@mui/material';
-import { IUserData } from "../../models/IUser";
-import { login } from "../../store/actionCreaotors/usesActionCreators";
+import React, {useState, ChangeEvent, FormEvent} from 'react';
+import {TextField, Button, Box, Typography} from '@mui/material';
+import {IUserData} from "../../models/IUser";
+import {login, register} from "../../store/actionCreaotors/usesActionCreators";
 import {Link, useNavigate} from "react-router-dom";
-import { useAppDispatch } from "../../hooks/redux";
+import {useAppDispatch} from "../../hooks/redux";
+
+interface FormProps {
+    isRegisterForm: boolean;
+}
 
 interface FormErrors {
     username?: string;
     password?: string;
 }
 
-function LoginForm() {
+const Form: React.FC<FormProps> = ({ isRegisterForm }) => {
     const [formData, setFormData] = useState<IUserData>({
         username: '',
         password: '',
     });
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
-
     const [errors, setErrors] = useState<FormErrors>({});
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -30,7 +33,6 @@ function LoginForm() {
 
     const validateForm = (): boolean => {
         const tempErrors: FormErrors = {};
-
         if (!formData.username) tempErrors.username = "Username is required";
         if (!formData.password) tempErrors.password = "Password is required";
 
@@ -38,13 +40,14 @@ function LoginForm() {
         return Object.keys(tempErrors).length === 0;
     };
 
-    const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (validateForm()) {
-            dispatch(login(formData))
-                .then(() => {
-                    navigate('/home')
-                });
+            if (isRegisterForm) {
+                await dispatch(register(formData));
+            }
+            await dispatch(login(formData));
+            navigate('/home');
         }
     };
 
@@ -65,7 +68,7 @@ function LoginForm() {
             }}
         >
             <Typography variant="h4" align="center" gutterBottom>
-                Login
+                {isRegisterForm ? 'Register' : 'Login'}
             </Typography>
 
             <TextField
@@ -92,16 +95,18 @@ function LoginForm() {
             />
 
             <Button type="submit" variant="contained" color="primary" fullWidth>
-                Login
+                {isRegisterForm ? 'Register' : 'Login'}
             </Button>
             <Box>
                 <Typography>
-                    You don't have any account?
+                    {isRegisterForm ? "You already have an account?" : "You don't have any account?"}
                 </Typography>
-                <Link to='/register'>Please Register</Link>
+                <Link to={isRegisterForm ? '/login' : '/register'}>
+                    {isRegisterForm ? 'Please Login' : 'Please Register'}
+                </Link>
             </Box>
         </Box>
     );
-}
+};
 
-export default LoginForm;
+export default Form;

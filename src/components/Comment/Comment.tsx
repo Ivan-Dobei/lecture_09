@@ -1,8 +1,8 @@
 import React from 'react';
-import { Box, Typography, Avatar, Paper, Button } from "@mui/material";
-import { IComment } from "../../models/IComment";
+import {Box, Typography, Avatar, Paper, Button} from "@mui/material";
+import {IComment} from "../../models/IComment";
 import useUser from "../../hooks/useUser";
-import { deleteCommentById } from "../../api/commentActions";
+import {deleteCommentById} from "../../api/commentActions";
 
 interface CommentProps {
     comment: IComment;

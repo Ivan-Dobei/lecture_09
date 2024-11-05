@@ -1,6 +1,6 @@
 import React from 'react';
-import { AppBar, Toolbar, Button, Box } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import {AppBar, Toolbar, Button, Box, Typography} from '@mui/material';
+import {useNavigate } from 'react-router-dom';
 import {useAppDispatch, useAppSelector} from "../../hooks/redux";
 import {logout} from "../../store/slices/userSlice";
 import ControlBar from "../ControlBar/ControlBar";
@@ -11,9 +11,8 @@ function Header() {
     const dispatch = useAppDispatch();
 
     const handleLoginClick = () => {
-        if(isAuthenticated) {
+        if (isAuthenticated) {
             dispatch(logout());
-            console.log(isAuthenticated);
         }
         navigate('/login');
     };
@@ -21,9 +20,12 @@ function Header() {
     return (
         <AppBar position="fixed">
             <Toolbar>
-                <ControlBar/>
-                <Box sx={{marginLeft: 'auto'}}>
-                    <Button sx={{backgroundColor: 'white', color: 'primary'}} onClick={handleLoginClick}>
+                <ControlBar />
+                <Box sx={{ marginLeft: 'auto' }}>
+                    <Button
+                        sx={{ backgroundColor: 'white', color: 'primary' }}
+                        onClick={handleLoginClick}
+                    >
                         {isAuthenticated ? 'Logout' : 'Login'}
                     </Button>
                 </Box>

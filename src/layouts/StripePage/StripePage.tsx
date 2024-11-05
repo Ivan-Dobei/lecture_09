@@ -1,8 +1,6 @@
-import React, { useState } from 'react';
-import { Box, Typography, Grid, CircularProgress, Button } from '@mui/material';
-import usePosts from "../../hooks/usePosts";
-import Post from "../../components/Post/Post";
-import Pagination from "../../components/Pagination/Pagination";
+import React, {useState} from 'react';
+import usePosts from '../../hooks/usePosts';
+import PostList from '../../components/PostList/PostList';
 
 function StripePage() {
     const [refreshList, setRefreshList] = useState<boolean>(false);
@@ -13,31 +11,16 @@ function StripePage() {
         setRefreshList(!refreshList);
     };
 
-    if (loading) {
-        return (
-            <Box display="flex" justifyContent="center" mt={5}>
-                <CircularProgress />
-            </Box>
-        );
-    }
-
     return (
-        <Box sx={{ flexGrow: 1, p: 3 }}>
-            <Box display="flex" flexDirection="column" alignItems="center" gap={2}>
-                {posts.map((post) => (
-                    <Box key={post.id}>
-                        <Post post={post} refreshList={refreshing} />
-                    </Box>
-                ))}
-            </Box>
-            {(paginationData && posts.length !== 0) && (
-                <Pagination
-                    currentPage={currentPage}
-                    paginationData={paginationData}
-                    setPage={setCurrentPage}
-                />
-            )}
-        </Box>
+        <PostList
+            posts={posts}
+            loading={loading}
+            paginationData={paginationData}
+            refreshPosts={refreshing}
+            isMyPosts={false}
+            currentPage={currentPage}
+            setPage={setCurrentPage}
+        />
     );
 }
 

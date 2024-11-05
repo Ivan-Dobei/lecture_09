@@ -1,10 +1,5 @@
-import React, { useState } from 'react';
-import {
-    Drawer,
-    List,
-    ListItem,
-    Divider, Button, Box,
-} from '@mui/material';
+import React, {useState} from 'react';
+import {Drawer, List, ListItem, Divider, Button, Box} from '@mui/material';
 import {Link} from "react-router-dom";
 
 const ControlBar = () => {
