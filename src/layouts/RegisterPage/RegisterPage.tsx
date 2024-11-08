@@ -1,9 +1,9 @@
 import React from 'react';
-import Form from "../../components/Form/Form";
+import PageForm from "../../components/PageForm/PageForm";
 
 function RegisterPage() {
     return (
-        <Form isRegisterForm={true}/>
+        <PageForm isRegisterForm={true}/>
     );
 }
 export default RegisterPage;
