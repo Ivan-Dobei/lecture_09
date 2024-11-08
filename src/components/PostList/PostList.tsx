@@ -2,28 +2,27 @@ import React from 'react';
 import {Box, Typography, CircularProgress} from '@mui/material';
 import Post from '../../components/Post/Post';
 import Pagination from '../../components/Pagination/Pagination';
-import {IPost, IPostDataPagination} from "../../models/IPost";
+import {IPost} from '../../models/IPost';
 import {Link} from "react-router-dom";
 
 interface PostListProps {
     posts: IPost[];
     loading: boolean;
-    paginationData: IPostDataPagination;
-    refreshPosts: () => void;
     currentPage: number;
-    setPage: React.Dispatch<React.SetStateAction<number>>;
+    lastPage: number;
     isMyPosts: boolean;
+    onPageChange: (page: number) => void;
 }
 
 const PostList: React.FC<PostListProps> = (props) => {
+
     const {
         posts,
         loading,
-        paginationData,
-        refreshPosts,
         currentPage,
-        setPage,
+        lastPage,
         isMyPosts,
+        onPageChange,
     } = props;
 
     if (loading) {
@@ -41,24 +40,26 @@ const PostList: React.FC<PostListProps> = (props) => {
             </Typography>
 
             <Box display="flex" flexDirection="column" alignItems="center" gap={2}>
-                {posts.length === 0 && isMyPosts ? (
+                {posts.length === 0 ? (
                     <Typography>
-                        <>You don't have any posts. <Link to='/newPost'>Create your first post</Link></>
+                        {isMyPosts && (
+                            <>You don't have any posts. <Link to="/newPost">Create your first post</Link></>
+                        )}
                     </Typography>
                 ) : (
                     posts.map((post) => (
                         <Box key={post.id}>
-                            <Post post={post} refreshList={refreshPosts} />
+                            <Post post={post}/>
                         </Box>
                     ))
                 )}
             </Box>
 
-            {paginationData && posts.length > 0 && (
+            {posts.length > 0 && (
                 <Pagination
                     currentPage={currentPage}
-                    paginationData={paginationData}
-                    setPage={setPage}
+                    lastPage={lastPage}
+                    onPageChange={onPageChange}
                 />
             )}
         </Box>

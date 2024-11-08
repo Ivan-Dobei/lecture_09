@@ -3,44 +3,31 @@ import {Box, Button, Card, CardContent, CardMedia, Typography} from "@mui/materi
 import {IPost} from "../../models/IPost";
 import axiosInstance from "../../api/axiosInstance";
 import {deletePostById} from "../../api/exhibitActions";
-import {IComment} from "../../models/IComment";
-import {getAllCommentsById} from "../../api/commentActions";
 import CommentList from "../CommentList/CommentList";
-import useUser from "../../hooks/useUser";
+import {useAppSelector} from "../../hooks/redux";
+import {useRequest} from "ahooks";
+import {useNavigate} from "react-router-dom";
 
 interface PostProps {
     post: IPost;
-    refreshList: () => void;
 }
 
-function Post({ post, refreshList }: PostProps) {
-    const {user} = useUser();
-    const isItMyPost = post.user.username === user?.username;
-    const [comments, setComments] = useState<IComment[]>([]);
+function Post({post}: PostProps) {
+    const navigate = useNavigate();
+    const {userData} = useAppSelector(state => state.user);
+    const isItMyPost = post.user.username === userData?.username;
     const [isCommentsVisible, setIsCommentsVisible] = useState(false);
 
-    const deletePost = async () => {
-        try {
-            await deletePostById(post.id);
-            refreshList();
-        } catch (error) {
-            console.error("Failed to delete post:", error);
-        }
-    };
+    const {run: deletePost} = useRequest((id) => deletePostById(id), {
+        manual: true,
+        onSuccess: () => navigate(0),
+    })
 
-    const refreshComments = async () => {
-        try {
-            const fetchedComments = await getAllCommentsById(post.id);
-            setComments(fetchedComments);
-        } catch (error) {
-            console.error("Failed to fetch comments:", error);
-        }
+    const handleDelete = async () => {
+        deletePost(post.id)
     };
 
     const toggleComments = async () => {
-        if (!comments.length) {
-            await refreshComments();
-        }
         setIsCommentsVisible(!isCommentsVisible);
     };
 
@@ -63,14 +50,14 @@ function Post({ post, refreshList }: PostProps) {
                         {isCommentsVisible ? 'Hide Comments' : 'Show Comments'}
                     </Button>
                     {isItMyPost && (
-                        <Button onClick={deletePost} color="error" variant="contained">
+                        <Button onClick={handleDelete} color="error" variant="contained">
                             Delete Post
                         </Button>
                     )}
                 </Box>
 
                 {isCommentsVisible && (
-                    <CommentList refreshComments={refreshComments} postId={post.id} comments={comments} />
+                    <CommentList postId={post.id} />
                 )}
             </CardContent>
         </Card>

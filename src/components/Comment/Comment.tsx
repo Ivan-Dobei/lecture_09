@@ -1,8 +1,8 @@
 import React from 'react';
 import {Box, Typography, Avatar, Paper, Button} from "@mui/material";
 import {IComment} from "../../models/IComment";
-import useUser from "../../hooks/useUser";
 import {deleteCommentById} from "../../api/commentActions";
+import {useAppSelector} from "../../hooks/redux";
 
 interface CommentProps {
     comment: IComment;
@@ -11,8 +11,8 @@ interface CommentProps {
 }
 
 function Comment({comment, refresh, postId}: CommentProps) {
-    const {user} = useUser();
-    const isItMyComment = comment.user.username === user?.username;
+    const {userData} = useAppSelector(state => state.user);
+    const isItMyComment = comment.user.username === userData?.username;
 
     const deleteComment = async () => {
         try {

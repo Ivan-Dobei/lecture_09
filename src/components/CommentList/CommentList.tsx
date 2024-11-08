@@ -1,32 +1,30 @@
 import React, {useState} from 'react';
-import {Box, Button, List, TextField, Typography, Paper, Divider} from "@mui/material";
-import Comment from "../Comment/Comment";
-import {IComment} from "../../models/IComment";
-import {createCommentById} from "../../api/commentActions";
+import {Box, Button, CircularProgress, List, TextField, Typography} from '@mui/material';
+import Comment from '../Comment/Comment';
+import {createCommentById, getAllCommentsById} from '../../api/commentActions';
+import {useRequest} from 'ahooks';
 
 interface CommentListProps {
     postId: number;
-    comments: IComment[] | null;
-    refreshComments: () => void;
 }
 
-function CommentList({ postId, comments, refreshComments }: CommentListProps) {
+function CommentList({ postId }: CommentListProps) {
     const [commentInput, setCommentInput] = useState<string>('');
-    const [errorMessage, setErrorMessage] = useState<string | null>(null);
+    const {loading, data: comments, error, refresh} = useRequest(() => getAllCommentsById(postId), {
+        refreshDeps: [postId]
+    });
 
     const handleCommentChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setCommentInput(event.target.value);
     };
 
     const createComment = async () => {
-        setErrorMessage(null);
         try {
-            console.log(commentInput);
             await createCommentById(postId, commentInput);
             setCommentInput('');
-            refreshComments();
+            refresh();
         } catch (error) {
-            setErrorMessage("Failed to create comment. Please try again.");
+            console.error("Failed to add comment:", error);
         }
     };
 
@@ -35,14 +33,16 @@ function CommentList({ postId, comments, refreshComments }: CommentListProps) {
             <Typography variant="h6" gutterBottom>
                 Comments
             </Typography>
+
+            {loading && (
+                <Box display="flex" justifyContent="center" mt={5}>
+                    <CircularProgress />
+                </Box>
+            )}
+
             <List>
-                {comments && comments.map(comment => (
-                        <Comment
-                            key={comment.id}
-                            comment={comment}
-                            refresh={refreshComments}
-                            postId={postId}
-                        />
+                {comments && comments.map((comment) => (
+                    <Comment key={comment.id} comment={comment} postId={postId} refresh={refresh} />
                 ))}
                 {comments && comments.length === 0 && (
                     <Typography variant="body2" color="text.secondary" align="center">
@@ -50,6 +50,7 @@ function CommentList({ postId, comments, refreshComments }: CommentListProps) {
                     </Typography>
                 )}
             </List>
+
             <Box sx={{ mt: 3, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                 <TextField
                     label="Add a Comment"
@@ -61,9 +62,9 @@ function CommentList({ postId, comments, refreshComments }: CommentListProps) {
                     fullWidth
                     sx={{ mb: 2 }}
                 />
-                {errorMessage && (
+                {error && (
                     <Typography color="error" variant="body2" align="center" sx={{ mb: 1 }}>
-                        {errorMessage}
+                        Something went wrong
                     </Typography>
                 )}
                 <Button
@@ -71,7 +72,8 @@ function CommentList({ postId, comments, refreshComments }: CommentListProps) {
                     color="primary"
                     onClick={createComment}
                     fullWidth
-                    sx={{ maxWidth: 200 }}
+                    disabled={loading || !commentInput.trim()}
+                    sx={{maxWidth: 200}}
                 >
                     Add Comment
                 </Button>

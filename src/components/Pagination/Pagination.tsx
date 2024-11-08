@@ -1,24 +1,23 @@
 import React from 'react';
-import {Box, Button, Typography} from "@mui/material";
-import {IPostDataPagination} from "../../models/IPost";
+import {Box, Button, Typography} from '@mui/material';
 
 interface PaginationProps {
     currentPage: number;
-    paginationData: IPostDataPagination;
-    setPage: React.Dispatch<React.SetStateAction<number>>;
+    lastPage: number;
+    onPageChange: (page: number) => void;
 }
 
-function Pagination({paginationData, currentPage, setPage}: PaginationProps) {
+const Pagination: React.FC<PaginationProps> = ({ currentPage, lastPage, onPageChange }) => {
 
     const handleNextPage = () => {
-        if (currentPage < paginationData.lastPage) {
-            setPage(prevPage => prevPage + 1);
+        if (currentPage < lastPage) {
+            onPageChange(currentPage + 1);
         }
     };
 
     const handlePrevPage = () => {
         if (currentPage > 1) {
-            setPage(prevPage => prevPage - 1);
+            onPageChange(currentPage - 1);
         }
     };
 
@@ -32,17 +31,17 @@ function Pagination({paginationData, currentPage, setPage}: PaginationProps) {
                 Previous
             </Button>
             <Typography variant="body1">
-                Page {paginationData.page} of {paginationData.lastPage}
+                Page {currentPage} of {lastPage}
             </Typography>
             <Button
                 variant="outlined"
                 onClick={handleNextPage}
-                disabled={currentPage === paginationData.lastPage}
+                disabled={currentPage === lastPage}
             >
                 Next
             </Button>
         </Box>
     );
-}
+};
 
 export default Pagination;

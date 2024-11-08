@@ -1,25 +1,35 @@
-import React, {useState} from 'react';
-import usePosts from '../../hooks/usePosts';
+import React from 'react';
 import PostList from '../../components/PostList/PostList';
+import {useRequest} from 'ahooks';
+import {fetchAllPosts} from '../../api/exhibitActions';
+import {IPostData} from '../../models/IPost';
+import {useSearchParams} from 'react-router-dom';
 
 function StripePage() {
-    const [refreshList, setRefreshList] = useState<boolean>(false);
-    const [currentPage, setCurrentPage] = useState<number>(1);
-    const { posts, paginationData, loading } = usePosts(refreshList, currentPage);
+    const [searchParams, setSearchParams] = useSearchParams();
+    const currentPage = parseInt(searchParams.get('page') || '1');
 
-    const refreshing = () => {
-        setRefreshList(!refreshList);
+    const {loading, data, error} = useRequest<IPostData, [number]>(
+        () => fetchAllPosts(currentPage),
+        { refreshDeps: [currentPage] }
+    );
+
+    const handlePageChange = (page: number) => {
+        setSearchParams({ page: page.toString() });
     };
+
+    if (error) {
+        return <p>Error loading posts.</p>;
+    }
 
     return (
         <PostList
-            posts={posts}
+            posts={data?.data || []}
             loading={loading}
-            paginationData={paginationData}
-            refreshPosts={refreshing}
-            isMyPosts={false}
             currentPage={currentPage}
-            setPage={setCurrentPage}
+            lastPage={data?.lastPage || 1}
+            isMyPosts={false}
+            onPageChange={handlePageChange}
         />
     );
 }

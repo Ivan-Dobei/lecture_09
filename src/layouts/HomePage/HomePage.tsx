@@ -1,25 +1,35 @@
-import React, {useState} from 'react';
-import useMyPost from '../../hooks/useMyPost';
+import React from 'react';
 import PostList from '../../components/PostList/PostList';
+import {useSearchParams} from "react-router-dom";
+import {useRequest} from "ahooks";
+import {IPostData} from "../../models/IPost";
+import {fetchMyPosts} from "../../api/exhibitActions";
 
 function HomePage() {
-    const [refreshList, setRefreshList] = useState<boolean>(false);
-    const [currentPage, setCurrentPage] = useState<number>(1);
-    const { myPosts, loading, paginationData } = useMyPost(refreshList, currentPage);
+    const [searchParams, setSearchParams] = useSearchParams();
+    const currentPage = parseInt(searchParams.get('page') || '1');
 
-    const refreshing = () => {
-        setRefreshList(!refreshList);
+    const { loading, data, error, refresh} = useRequest<IPostData, [number]>(
+        () => fetchMyPosts(currentPage),
+        { refreshDeps: [currentPage] }
+    );
+
+    const handlePageChange = (page: number) => {
+        setSearchParams({ page: page.toString() });
     };
+
+    if (error) {
+        return <p>Error loading posts.</p>;
+    }
 
     return (
         <PostList
-            posts={myPosts}
+            posts={data?.data || []}
             loading={loading}
-            paginationData={paginationData}
-            refreshPosts={refreshing}
-            isMyPosts={true}
             currentPage={currentPage}
-            setPage={setCurrentPage}
+            lastPage={data?.lastPage || 1}
+            isMyPosts={true}
+            onPageChange={handlePageChange}
         />
     );
 }
